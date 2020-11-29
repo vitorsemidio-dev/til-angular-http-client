@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Observable, Subject, EMPTY } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
@@ -11,11 +12,17 @@ import { AlertModalService } from './../../shared/alert-modal.service';
   styleUrls: ['./cursos-lista.component.css'],
 })
 export class CursosListaComponent implements OnInit {
+  @ViewChild('deleteModal') deleteModal;
+
   cursos$: Observable<Curso[]>;
   error$ = new Subject<boolean>();
+  modalRef: BsModalRef;
+
+  cursoSelecionado: Curso;
 
   constructor(
     private service: CursosService,
+    private modalService: BsModalService,
     private alertService: AlertModalService,
   ) {}
 
@@ -30,7 +37,6 @@ export class CursosListaComponent implements OnInit {
   onRefrash() {
     this.cursos$ = this.service.list().pipe(
       catchError((error) => {
-        console.error();
         this.error$.next(true);
         this.handleError();
         return EMPTY;
@@ -42,5 +48,29 @@ export class CursosListaComponent implements OnInit {
     this.alertService.showAlertDanger(
       'Erro ao carregar lista de cursos. Tente novamente mais tarde.',
     );
+  }
+
+  onDelete(curso: Curso) {
+    this.cursoSelecionado = curso;
+    this.modalRef = this.modalService.show(this.deleteModal, {
+      class: 'modal-sm',
+    });
+  }
+
+  onConfirmDelete(): void {
+    this.service.delete(this.cursoSelecionado).subscribe(
+      (result) => {
+        this.alertService.showAlertSuccess('Curso removido com sucesso');
+        this.onRefrash();
+      },
+      (error) => {
+        this.alertService.showAlertDanger('Falha ao remover curso');
+      },
+    );
+    this.modalRef.hide();
+  }
+
+  onDeclineDelete(): void {
+    this.modalRef.hide();
   }
 }

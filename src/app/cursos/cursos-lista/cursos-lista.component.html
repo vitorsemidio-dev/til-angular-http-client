@@ -30,7 +30,9 @@
             <a [routerLink]="['editar', curso.id]" class="btn btn-warning"
               >Editar</a
             >
-            <button class="btn btn-danger">Remover</button>
+            <button (click)="onDelete(curso)" class="btn btn-danger">
+              Remover
+            </button>
           </td>
         </tr>
       </tbody>
@@ -46,3 +48,15 @@
     </ng-template>
   </div>
 </div>
+
+<ng-template #deleteModal>
+  <div class="modal-body text-center">
+    <p>Tem certeza que deseja remover esse curso?</p>
+    <button (click)="onConfirmDelete()" type="button" class="btn btn-primary">
+      Sim
+    </button>
+    <button (click)="onDeclineDelete()" type="button" class="btn btn-default">
+      Não
+    </button>
+  </div>
+</ng-template>
