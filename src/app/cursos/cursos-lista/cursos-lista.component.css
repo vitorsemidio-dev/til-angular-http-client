@@ -1,0 +1,13 @@
+tr th:first-child {
+  width: 10%;
+  min-width: 50px;
+}
+
+tr th:last-child {
+  width: 20%;
+  min-width: 200px;
+}
+
+.btn + .btn {
+  margin-left: 5px;
+}
