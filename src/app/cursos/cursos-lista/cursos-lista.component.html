@@ -1,15 +1,16 @@
-
 <div class="card">
   <div class="card-header d-flex justify-content-between">
-    <h2>
-      Cursos
-    </h2>
-    <a [routerLink]="['novo']" class="btn btn-primary">
-      Novo Curso
-    </a>
+    <h2>Cursos</h2>
+    <div>
+      <button (click)="onRefrash()" class="btn btn-warning">Atualizar</button>
+      <a [routerLink]="['novo']" class="btn btn-primary"> Novo Curso </a>
+    </div>
   </div>
   <div class="card-body">
-    <table class="table table-dark" *ngIf="cursos$ | async as cursos; else loading" >
+    <table
+      class="table table-dark"
+      *ngIf="cursos$ | async as cursos; else loadingError"
+    >
       <thead>
         <tr>
           <th scope="col">#</th>
@@ -18,7 +19,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let curso of cursos" >
+        <tr *ngFor="let curso of cursos">
           <th scope="row">
             {{ curso.id }}
           </th>
@@ -33,10 +34,13 @@
       </tbody>
     </table>
 
-    <ng-template #loading>
-      <span>
-        Carregando Cursos...
-      </span>
+    <ng-template #loadingError>
+      <div class="alert alert-danger" *ngIf="error$ | async; else loading">
+        Erro ao carregar cursos. Tente novamente mais tarde
+      </div>
+      <ng-template #loading>
+        <span> Carregando Cursos... </span>
+      </ng-template>
     </ng-template>
   </div>
 </div>
