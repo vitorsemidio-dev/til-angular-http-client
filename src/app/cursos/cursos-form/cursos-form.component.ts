@@ -1,12 +1,21 @@
 import { Location } from '@angular/common';
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { map, switchMap } from 'rxjs/operators';
 
+import { Curso } from '../curso';
 import { CursosService } from './../cursos.service';
 import { AlertModalService } from './../../shared/alert-modal.service';
-import { Curso } from '../curso';
+
+enum RequestTypes {
+  CREATE = 'create',
+  UDPATE = 'update',
+}
+
+interface FeedbackMsg {
+  msgSuccess: string;
+  msgError: string;
+}
 @Component({
   selector: 'app-cursos-form',
   templateUrl: './cursos-form.component.html',
@@ -15,6 +24,8 @@ import { Curso } from '../curso';
 export class CursosFormComponent implements OnInit {
   form: FormGroup;
   submitted = false;
+
+  feedbackMsg: FeedbackMsg;
 
   constructor(
     private fb: FormBuilder,
@@ -25,24 +36,15 @@ export class CursosFormComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.buildForm();
-
-    this.route.params
-      .pipe(
-        map((params) => params.id),
-        switchMap((id) => this.service.loadById(id)),
-      )
-      .subscribe((curso) => {
-        console.log(curso);
-        this.updateForm(curso);
-      });
+    const curso = this.route.snapshot.data.curso;
+    this.buildForm(curso);
   }
 
-  buildForm() {
+  buildForm(initialData: Curso) {
     this.form = this.fb.group({
-      id: [null],
+      id: [initialData.id],
       nome: [
-        null,
+        initialData.nome,
         [
           Validators.required,
           Validators.minLength(3),
@@ -52,38 +54,29 @@ export class CursosFormComponent implements OnInit {
     });
   }
 
-  updateForm(curso: Curso) {
-    this.form.patchValue({
-      id: curso.id,
-      nome: curso.nome,
-    });
-  }
-
   onSubmit() {
     this.submitted = true;
     if (this.form.valid) {
-      this.service.create(this.form.value).subscribe(
-        (result) => {
-          this.alertService.showAlertSuccess('Criado com sucesso');
-          this.location.back();
-        },
-        (error) => {
-          this.alertService.showAlertDanger('Falha ao salvar curso');
-        },
-      );
+      this.save(this.form.value);
     }
   }
 
-  private create() {
-    //
-  }
+  private save(curso: Curso) {
+    if (!curso.id) {
+      this.feedbackMsg = this.getFeedbackMesage(RequestTypes.CREATE);
+    } else {
+      this.feedbackMsg = this.getFeedbackMesage(RequestTypes.UDPATE);
+    }
 
-  private update() {
-    //
-  }
-
-  private save() {
-    //
+    this.service.save(curso).subscribe(
+      (result) => {
+        this.alertService.showAlertSuccess(this.feedbackMsg.msgSuccess);
+        this.location.back();
+      },
+      (error) => {
+        this.alertService.showAlertDanger(this.feedbackMsg.msgError);
+      },
+    );
   }
 
   onCancel() {
@@ -93,5 +86,28 @@ export class CursosFormComponent implements OnInit {
 
   hasError(field: string) {
     return this.form.get(field).errors;
+  }
+
+  private getFeedbackMesage(type: RequestTypes) {
+    switch (type) {
+      case RequestTypes.CREATE: {
+        return {
+          msgSuccess: 'Curso criado com sucesso',
+          msgError: 'Erro ao criar curso, tente novamente mais tarde',
+        };
+      }
+      case RequestTypes.UDPATE: {
+        return {
+          msgSuccess: 'Curso atualizado com sucesso',
+          msgError: 'Erro ao atualizar curso, tente novamente mais tarde',
+        };
+      }
+      default: {
+        return {
+          msgSuccess: 'Curso criado com sucesso',
+          msgError: 'Erro ao criar curso, tente novamente mais tarde',
+        };
+      }
+    }
   }
 }
