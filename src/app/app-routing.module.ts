@@ -5,12 +5,20 @@ const routes: Routes = [
   { path: '', redirectTo: 'cursos', pathMatch: 'full' },
   {
     path: 'cursos',
-    loadChildren: () => import('./cursos/cursos.module').then(m => m.CursosModule)
-  }
+    loadChildren: () =>
+      import('./cursos/cursos.module').then((m) => m.CursosModule),
+  },
+  {
+    path: 'rxjs-poc',
+    loadChildren: () =>
+      import('./unsubscribe-rxjs/unsubscribe-rxjs.module').then(
+        (m) => m.UnsubscribeRxjsModule,
+      ),
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
