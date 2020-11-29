@@ -27,7 +27,9 @@
             {{ curso.nome }}
           </td>
           <td>
-            <button class="btn btn-warning">Editar</button>
+            <a [routerLink]="['editar', curso.id]" class="btn btn-warning"
+              >Editar</a
+            >
             <button class="btn btn-danger">Remover</button>
           </td>
         </tr>
