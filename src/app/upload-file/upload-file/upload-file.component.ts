@@ -1,6 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
+
 import { UploadFileService } from './../upload-file.service';
+import { environment } from './../../../environments/environment';
 
 @Component({
   selector: 'app-upload-file',
@@ -45,7 +47,7 @@ export class UploadFileComponent implements OnInit, OnDestroy {
   onUpload() {
     if (this.files && this.files.size > 0) {
       this.sub = this.uploadFileService
-        .upload(this.files, 'http://localhost:3000/upload')
+        .upload(this.files, `${environment.baseUrl}/upload`)
         .subscribe((response) => console.log('Upload concluído'));
     }
   }
