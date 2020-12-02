@@ -1,17 +1,28 @@
-<div class="custom-file mb-3">
-  <input
-    type="file"
-    class="custom-file-input"
-    id="input-upload-file"
-    multiple
-    (change)="onChange($event)"
-  />
-  <label
-    class="custom-file-label"
-    id="label-upload-file"
-    for="input-upload-file"
-    >Selecionar Arquivos</label
-  >
+<div class="mb-3">
+  <div class="custom-file">
+    <input
+      type="file"
+      class="custom-file-input"
+      id="input-upload-file"
+      multiple
+      (change)="onChange($event)"
+    />
+    <label
+      class="custom-file-label"
+      id="label-upload-file"
+      for="input-upload-file"
+      >Selecionar Arquivos</label
+    >
+  </div>
+  <div class="progress">
+    <div
+      class="progress-bar progress-bar-striped"
+      role="progressbar"
+      [style.width]="progress + '%'"
+    >
+      {{ progress }}%
+    </div>
+  </div>
 </div>
 
 <button
