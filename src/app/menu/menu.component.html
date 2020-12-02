@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <a class="navbar-brand" href="#">Http</a>
+  <a class="navbar-brand" [routerLink]="['/']">Http</a>
   <button
     class="navbar-toggler"
     type="button"
@@ -13,14 +13,29 @@
   </button>
   <div class="collapse navbar-collapse" id="navbarText">
     <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-        <a class="nav-link" [routerLink]="['/']">Home</a>
+      <li class="nav-item">
+        <a
+          class="nav-link"
+          [routerLinkActive]="'active'"
+          [routerLink]="['/cursos']"
+          >Cursos</a
+        >
       </li>
       <li class="nav-item">
-        <a class="nav-link" [routerLink]="['/cursos']">Cursos</a>
+        <a
+          class="nav-link"
+          [routerLinkActive]="'active'"
+          [routerLink]="['/rxjs-poc']"
+          >RxJs Poc</a
+        >
       </li>
       <li class="nav-item">
-        <a class="nav-link" [routerLink]="['/rxjs-poc']">RxJs Poc</a>
+        <a
+          class="nav-link"
+          [routerLinkActive]="'active'"
+          [routerLink]="['/upload']"
+          >Upload Arquivo</a
+        >
       </li>
     </ul>
   </div>

@@ -1,0 +1,24 @@
+<div class="custom-file mb-3">
+  <input
+    type="file"
+    class="custom-file-input"
+    id="input-upload-file"
+    multiple
+    (change)="onChange($event)"
+  />
+  <label
+    class="custom-file-label"
+    id="label-upload-file"
+    for="input-upload-file"
+    >Selecionar Arquivos</label
+  >
+</div>
+
+<button
+  (click)="onUpload()"
+  [disabled]="!files"
+  type="button"
+  class="btn btn-primary"
+>
+  Enviar
+</button>
