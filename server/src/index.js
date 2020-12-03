@@ -22,6 +22,14 @@ app.post('/upload', multipartMiddleware, (req, res) => {
   });
 });
 
+app.get('/download/pdf', (req, res) => {
+  return res.download('./downloads/report.pdf');
+});
+
+app.get('/download/video', (req, res) => {
+  return res.download('./downloads/report.mp4');
+});
+
 app.use((err, req, res, next) => res.json({ error: err.message }));
 
 app.listen(3000, () => {

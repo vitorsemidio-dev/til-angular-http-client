@@ -66,4 +66,20 @@ export class UploadFileComponent implements OnInit, OnDestroy {
         );
     }
   }
+
+  onDownloadVideo() {
+    this.uploadFileService
+      .download(`${environment.baseUrl}/download/video`)
+      .subscribe((res) => {
+        this.uploadFileService.handleFile(res, 'report.mp4');
+      });
+  }
+
+  onDownloadPDF() {
+    this.uploadFileService
+      .download(`${environment.baseUrl}/download/pdf`)
+      .subscribe((res) => {
+        this.uploadFileService.handleFile(res, 'report.pdf');
+      });
+  }
 }
