@@ -1,9 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 
+import { filterResonse, uploadProgress } from 'src/app/shared/rxjs-operators';
+import { AlertModalService } from './../../shared/alert-modal.service';
 import { UploadFileService } from './../upload-file.service';
 import { environment } from './../../../environments/environment';
-import { HttpEvent, HttpEventType } from '@angular/common/http';
 
 @Component({
   selector: 'app-upload-file',
@@ -15,7 +16,10 @@ export class UploadFileComponent implements OnInit, OnDestroy {
   sub: Subscription;
   progress = 0;
 
-  constructor(private uploadFileService: UploadFileService) {}
+  constructor(
+    private uploadFileService: UploadFileService,
+    private alertService: AlertModalService,
+  ) {}
 
   ngOnInit() {}
 
@@ -50,15 +54,16 @@ export class UploadFileComponent implements OnInit, OnDestroy {
     if (this.files && this.files.size > 0) {
       this.sub = this.uploadFileService
         .upload(this.files, `${environment.baseUrl}/upload`)
-        .subscribe((event: HttpEvent<Object>) => {
-          if (event.type === HttpEventType.Response) {
-            console.log('Upload concluído');
-          } else if (event.type === HttpEventType.UploadProgress) {
-            const percentDone = Math.round((event.loaded * 100) / event.total);
-            console.log('Progresso', percentDone);
-            this.progress = percentDone;
-          }
-        });
+        .pipe(
+          uploadProgress((progress) => {
+            console.log(progress);
+            this.progress = progress;
+          }),
+          filterResonse(),
+        )
+        .subscribe((response) =>
+          this.alertService.showAlertSuccess('Upload concluído com sucesso'),
+        );
     }
   }
 }
