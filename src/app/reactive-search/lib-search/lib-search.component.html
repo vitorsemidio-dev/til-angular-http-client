@@ -11,7 +11,9 @@
         />
       </div>
       <div class="col-md-3">
-        <button (click)="onSearch()" class="btn btn-primary">Pesquisar</button>
+        <button [disabled]="true" (click)="onSearch()" class="btn btn-primary">
+          Pesquisar
+        </button>
       </div>
     </div>
   </div>
